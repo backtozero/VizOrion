@@ -9,11 +9,11 @@
         src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['line', 'corechart', 'table']}]}"></script>
 
 <body>
-<h1 style="text-align: center">OracleIONumbers - ORION Data Visualizer</h1>
+<!--<h1 style="text-align: center">OracleIONumbers - ORION Data Visualizer</h1>-->
 <br>
 
 <form>
-    <table style="text-align: left">
+    <table style="text-align: left; float: left">
         <tr>
             <td style="text-align: right"><b>Files to load:</b></td>
             <td><input type="file" id="fileInput" multiple></td>
@@ -28,6 +28,31 @@
         </tr>
     </table>
 </form>
+<table>
+    <tr>
+        <td>
+            <input type="button" value="Check All">
+            <input type="button" value="Uncheck All">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="container" id="chkboxList">
+                <input type="checkbox"/> This is checkbox <br/>
+                <input type="checkbox"/> This is checkbox <br/>
+                <input type="checkbox"/> This is checkbox <br/>
+                <input type="checkbox"/> This is checkbox <br/>
+                <input type="checkbox"/> This is checkbox <br/>
+                <input type="checkbox"/> This is checkbox <br/>
+                <input type="checkbox"/> This is checkbox <br/>
+                <input type="checkbox"/> This is checkbox <br/>
+                <input type="checkbox"/> This is checkbox <br/>
+                <input type="checkbox"/> This is checkbox <br/>
+            </div>
+        </td>
+    </tr>
+</table>
+
 <br>
 <section class="tabs">
     <input id="tab_1" type="radio" name="tab" checked="checked"/>
@@ -45,7 +70,9 @@
             <details>
                 <summary>Table</summary>
                 <pre id="iopsDescription"></pre>
-                <div id="iopsTable"></div>
+                <div id="iopsTable">
+
+                </div>
             </details>
             <div id="iopsChart">
             </div>
