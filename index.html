@@ -31,23 +31,13 @@
 <table>
     <tr>
         <td>
-            <input type="button" value="Check All">
-            <input type="button" value="Uncheck All">
+            <input type="button" value="Check All" id="btnChkAll">
+            <input type="button" value="Uncheck All" id="btnUnchkAll">
         </td>
     </tr>
     <tr>
         <td>
             <div class="container" id="chkboxList">
-                <input type="checkbox"/> This is checkbox <br/>
-                <input type="checkbox"/> This is checkbox <br/>
-                <input type="checkbox"/> This is checkbox <br/>
-                <input type="checkbox"/> This is checkbox <br/>
-                <input type="checkbox"/> This is checkbox <br/>
-                <input type="checkbox"/> This is checkbox <br/>
-                <input type="checkbox"/> This is checkbox <br/>
-                <input type="checkbox"/> This is checkbox <br/>
-                <input type="checkbox"/> This is checkbox <br/>
-                <input type="checkbox"/> This is checkbox <br/>
             </div>
         </td>
     </tr>
@@ -106,8 +96,10 @@
     var fileInput = document.getElementById('fileInput');
     var pivotCheckBox = document.getElementById('pivotCheckBox');
     var buttonfire = document.getElementById('fire');
+    var chkBoxList = document.getElementById('chkboxList');
 
     var iopsDataTable;
+    var iopsDataView;
     var latencyDataTable;
     var mbpsDataTable;
 
@@ -183,10 +175,10 @@
     }
 
     buttonfire.onclick = function () {
-        drawChart()
+        initialize()
     };
 
-    function drawChart() {
+    function initialize() {
         var files = fileInput.files;
 
         for (var i = 0; i < files.length; i++) {
@@ -205,8 +197,7 @@
                             } else {
                                 mbpsDataTable = google.visualization.arrayToDataTable(transposeInLoop(transposeInLoop(dataArray)), false);
                             }
-                            mbpsChart.draw(mbpsDataTable, mbpsChartOptions);
-                            mbpsTable.draw(mbpsDataTable, tableOptions);
+                            drawCharts();
                             break;
                         }
                         case '_iops.csv':
@@ -215,11 +206,13 @@
                             iopsDescription.innerHTML = prepareCSV(e.target.result.trim())[0];
                             if (pivotCheckBox.checked) {
                                 iopsDataTable = google.visualization.arrayToDataTable(transposeInLoop(dataArray), false);
+                                iopsDataView = new google.visualization.DataView(iopsDataTable);
                             } else {
                                 iopsDataTable = google.visualization.arrayToDataTable(transposeInLoop(transposeInLoop(dataArray)), false);
+                                iopsDataView = new google.visualization.DataView(iopsDataTable);
                             }
-                            iopsChart.draw(iopsDataTable, iopsChartOptions);
-                            iopsTable.draw(iopsDataTable, tableOptions);
+                            drawCharts();
+                            fillChkBoxesList(iopsDataTable);
                             break;
                         }
                         case '_lat.csv':
@@ -231,8 +224,7 @@
                             } else {
                                 latencyDataTable = google.visualization.arrayToDataTable(transposeInLoop(transposeInLoop(dataArray)), false);
                             }
-                            latencyChart.draw(latencyDataTable, latencyChartOptions);
-                            latencyTable.draw(latencyDataTable, tableOptions);
+                            drawCharts();
                             break;
                         }
                     }
@@ -241,6 +233,20 @@
             }(files[i]));
         }
     }
+
+    function drawCharts() {
+
+
+        iopsChart.draw(iopsDataView, iopsChartOptions);
+        iopsTable.draw(iopsDataView, tableOptions);
+
+        latencyChart.draw(latencyDataTable, latencyChartOptions);
+        latencyTable.draw(latencyDataTable, tableOptions);
+
+        mbpsChart.draw(mbpsDataTable, mbpsChartOptions);
+        mbpsTable.draw(mbpsDataTable, tableOptions);
+    }
+
     function CSVToArray(strData, strDelimiter) {
         // Check to see if the delimiter is defined. If not,
         // then default to comma.
@@ -360,5 +366,50 @@
         }
         return newArr;
     }
+
+    function fillChkBoxesList(dataTable){
+
+        for (var i = 0; i < dataTable.getNumberOfColumns(); i++){
+
+            var newChkBox = document.createElement('input');
+            newChkBox.type = 'checkbox';
+            newChkBox.id = 'iops_' + i;
+            newChkBox.value = i;
+            newChkBox.checked = true;
+            newChkBox.name = 'chkboxFilter';
+            newChkBox.className = 'chkboxFilter';
+            newChkBox.onclick = function(){filter(this.value)};
+            if (i == 0) {
+                newChkBox.disabled = true;
+            }
+
+            var label = document.createElement('label')
+            label.htmlFor = 'iops_' + i;
+            label.appendChild(document.createTextNode(dataTable.getColumnLabel(i)));
+
+            var br = document.createElement('br');
+
+            chkBoxList.appendChild(newChkBox);
+            chkBoxList.appendChild(label);
+            chkBoxList.appendChild(br);
+        }
+    }
+
+    function filter(str) {
+        var columns = chkBoxList.getElementsByClassName('chkboxFilter');
+        var columnNumbers = [];
+
+        for (var i = 0; i < chkBoxList.getElementsByClassName('chkboxFilter').length; i++) {
+            if (columns[i].checked) {
+                columnNumbers.push(parseInt(columns[i].value));
+            }
+        }
+
+        console.log( "iopsDataView.getViewColumns() " + iopsDataView.getViewColumns());
+        console.log( "columnNumbers " + columnNumbers);
+        iopsDataView.setColumns(columnNumbers);
+        drawCharts();
+    }
+
 </script>
 </html>
