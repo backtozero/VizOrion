@@ -9,84 +9,87 @@
         src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['line', 'corechart', 'table']}]}"></script>
 
 <body>
-<!--<h1 style="text-align: center">OracleIONumbers - ORION Data Visualizer</h1>-->
-<br>
+<div>
+    <div style="float: left">
 
-<form>
-    <table style="text-align: left; float: left">
-        <tr>
-            <td style="text-align: right"><b>Files to load:</b></td>
-            <td><input type="file" id="fileInput" multiple></td>
-        </tr>
-        <tr>
-            <td style="text-align: right"><b>Transpose Data:</b></td>
-            <td><input type="checkbox" checked="true" id="pivotCheckBox"></td>
-        </tr>
-        <tr>
-            <td style="text-align: right"><b>Action:</b></td>
-            <td><input type="button" value="Execute" id="fire"  style="background-color: orangered"></td>
-        </tr>
-    </table>
-</form>
-<table>
-    <tr>
-        <td>
-            <input type="button" value="Check All" id="btnChkAll">
-            <input type="button" value="Uncheck All" id="btnUnchkAll">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="container" id="chkboxList">
-            </div>
-        </td>
-    </tr>
-</table>
-
-<br>
-<section class="tabs">
-    <input id="tab_1" type="radio" name="tab" checked="checked"/>
-    <input id="tab_2" type="radio" name="tab"/>
-    <input id="tab_3" type="radio" name="tab"/>
-
-    <label for="tab_1" id="tab_l1">IOPS</label>
-    <label for="tab_2" id="tab_l2">Latency</label>
-    <label for="tab_3" id="tab_l3">MBPS</label>
-
-    <div style="clear:both"></div>
-
-    <div class="tabs_cont">
-        <div id="tab_c1">
-            <details>
-                <summary>Table</summary>
-                <pre id="iopsDescription"></pre>
-                <div id="iopsTable">
-
-                </div>
-            </details>
-            <div id="iopsChart">
-            </div>
-        </div>
-        <div id="tab_c2">
-            <details>
-                <summary>Table</summary>
-                <pre id="latencyDescription"></pre>
-                <div id="latencyTable"></div>
-            </details>
-            <div id="latencyChart">
-            </div>
-        </div>
-        <div id="tab_c3">
-            <details>
-                <summary>Table</summary>
-                <pre id="mbpsDescription"></pre>
-                <div id="mbpsTable"></div>
-            </details>
-            <div id="mbpsChart">
-            </div>
-        </div>
+        <table style="text-align: left">
+            <tr>
+                <td><b>Files to load:</b></td>
+            </tr>
+            <tr>
+                <td><input type="file" id="fileInput" multiple></td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Transpose Data:</b>
+                    <input type="checkbox" checked="true" id="pivotCheckBox">
+                </td>
+            </tr>
+            <tr>
+                <td><b>Action:</b>
+                    <input type="button" value="Execute" id="fire" style="background-color: orangered">
+                </td>
+            </tr>
+            <tr>
+                <td><b>Filter:</b></td>
+            </tr>
+            <tr>
+                <td>
+                <input type="button" value="Check All" id="btnChkAll">
+                <input type="button" value="Uncheck All" id="btnUnchkAll">
+                </td>
+            </tr>
+            <tr>
+                <td><div class="container" id="chkboxList"></div></td>
+            </tr>
+        </table>
     </div>
-</section>
+    <div style="float: left">
+        <section class="tabs">
+            <input id="tab_1" type="radio" name="tab" checked="checked"/>
+            <input id="tab_2" type="radio" name="tab"/>
+            <input id="tab_3" type="radio" name="tab"/>
+
+            <label for="tab_1" id="tab_l1">IOPS</label>
+            <label for="tab_2" id="tab_l2">Latency</label>
+            <label for="tab_3" id="tab_l3">MBPS</label>
+
+            <div style="clear:both"></div>
+
+            <div class="tabs_cont">
+                <div id="tab_c1">
+                    <details>
+                        <summary>Table</summary>
+                        <pre id="iopsDescription"></pre>
+                        <div id="iopsTable">
+
+                        </div>
+                    </details>
+                    <div id="iopsChart">
+                    </div>
+                </div>
+                <div id="tab_c2">
+                    <details>
+                        <summary>Table</summary>
+                        <pre id="latencyDescription"></pre>
+                        <div id="latencyTable"></div>
+                    </details>
+                    <div id="latencyChart">
+                    </div>
+                </div>
+                <div id="tab_c3">
+                    <details>
+                        <summary>Table</summary>
+                        <pre id="mbpsDescription"></pre>
+                        <div id="mbpsTable"></div>
+                    </details>
+                    <div id="mbpsChart">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
 </body>
 
 <script type="text/javascript">
@@ -96,12 +99,16 @@
     var fileInput = document.getElementById('fileInput');
     var pivotCheckBox = document.getElementById('pivotCheckBox');
     var buttonfire = document.getElementById('fire');
+    var buttonChkAll = document.getElementById('btnChkAll');
+    var buttonUchkAll = document.getElementById('btnUnchkAll');
     var chkBoxList = document.getElementById('chkboxList');
 
     var iopsDataTable;
     var iopsDataView;
     var latencyDataTable;
+    var latencyDataView;
     var mbpsDataTable;
+    var mbpsDataView;
 
     var iopsDescription = document.getElementById('iopsDescription');
     var iopsChartDiv = document.getElementById('iopsChart');
@@ -120,7 +127,7 @@
     var mbpsChart = new google.visualization.LineChart(mbpsChartDiv);
 
     var iopsChartOptions = {
-        title: 'IOPS',
+        title: 'IOPS ',
         width: 1200,
         height: 1200,
         crosshair: { trigger: 'both' },
@@ -130,14 +137,14 @@
         },
         vAxes: {
             // Adds titles to each axis.
-            0: {title: 'IOPSvAxes'}
+            0: {title: 'IOPS'}
         },
         hAxis: {
             title: 'Large/Small'
         }
     };
     var latencyChartOptions = {
-        title: 'Latency',
+        title: 'Latency ',
         width: 1200,
         height: 1200,
         crosshair: { trigger: 'both' },
@@ -154,7 +161,7 @@
         }
     };
     var mbpsChartOptions = {
-        title: 'MBPS',
+        title: 'MBPS ',
         width: 1200,
         height: 1200,
         crosshair: { trigger: 'both' },
@@ -174,6 +181,14 @@
         showRowNumber: true
     }
 
+    buttonChkAll.onclick = function() {
+        chk(false);
+    };
+
+    buttonUchkAll.onclick = function() {
+        chk(true);
+    };
+
     buttonfire.onclick = function () {
         initialize()
     };
@@ -185,25 +200,30 @@
             (function (file) {
                 var reader = new FileReader();
                 var fileType = file.name.substr(file.name.lastIndexOf('_'), file.name.indexOf('.'));
-                var name = file.name;
+                var fileName = file.name;
                 reader.onload = function (e) {
                     switch (fileType) {
                         case '_mbps.csv':
                         {
                             var dataArray = CSVToArray(prepareCSV(e.target.result.trim())[1]);
                             mbpsDescription.innerHTML = prepareCSV(e.target.result.trim())[0];
+                            mbpsChartOptions['title'] =  'MBPS: ' + fileName;
                             if (pivotCheckBox.checked) {
                                 mbpsDataTable = google.visualization.arrayToDataTable(transposeInLoop(dataArray), false);
+                                mbpsDataView = new google.visualization.DataView(mbpsDataTable);
                             } else {
                                 mbpsDataTable = google.visualization.arrayToDataTable(transposeInLoop(transposeInLoop(dataArray)), false);
+                                mbpsDataView = new google.visualization.DataView(mbpsDataTable);
                             }
-                            drawCharts();
+                            mbpsChart.draw(mbpsDataView, mbpsChartOptions);
+                            mbpsTable.draw(mbpsDataView, tableOptions);
                             break;
                         }
                         case '_iops.csv':
                         {
                             var dataArray = CSVToArray(prepareCSV(e.target.result.trim())[1]);
                             iopsDescription.innerHTML = prepareCSV(e.target.result.trim())[0];
+                            iopsChartOptions['title'] =  'IOPS: ' + fileName;
                             if (pivotCheckBox.checked) {
                                 iopsDataTable = google.visualization.arrayToDataTable(transposeInLoop(dataArray), false);
                                 iopsDataView = new google.visualization.DataView(iopsDataTable);
@@ -211,7 +231,8 @@
                                 iopsDataTable = google.visualization.arrayToDataTable(transposeInLoop(transposeInLoop(dataArray)), false);
                                 iopsDataView = new google.visualization.DataView(iopsDataTable);
                             }
-                            drawCharts();
+                            iopsChart.draw(iopsDataView, iopsChartOptions);
+                            iopsTable.draw(iopsDataView, tableOptions);
                             fillChkBoxesList(iopsDataTable);
                             break;
                         }
@@ -219,12 +240,16 @@
                         {
                             var dataArray = CSVToArray(prepareCSV(e.target.result.trim())[1]);
                             latencyDescription.innerHTML = prepareCSV(e.target.result.trim())[0];
+                            latencyChartOptions['title'] =  'Latency: ' + fileName;
                             if (pivotCheckBox.checked) {
                                 latencyDataTable = google.visualization.arrayToDataTable(transposeInLoop(dataArray), false);
+                                latencyDataView = new google.visualization.DataView(latencyDataTable);
                             } else {
                                 latencyDataTable = google.visualization.arrayToDataTable(transposeInLoop(transposeInLoop(dataArray)), false);
+                                latencyDataView = new google.visualization.DataView(latencyDataTable);
                             }
-                            drawCharts();
+                            latencyChart.draw(latencyDataView, latencyChartOptions);
+                            latencyTable.draw(latencyDataView, tableOptions);
                             break;
                         }
                     }
@@ -240,11 +265,11 @@
         iopsChart.draw(iopsDataView, iopsChartOptions);
         iopsTable.draw(iopsDataView, tableOptions);
 
-        latencyChart.draw(latencyDataTable, latencyChartOptions);
-        latencyTable.draw(latencyDataTable, tableOptions);
+        latencyChart.draw(latencyDataView, latencyChartOptions);
+        latencyTable.draw(latencyDataView, tableOptions);
 
-        mbpsChart.draw(mbpsDataTable, mbpsChartOptions);
-        mbpsTable.draw(mbpsDataTable, tableOptions);
+        mbpsChart.draw(mbpsDataView, mbpsChartOptions);
+        mbpsTable.draw(mbpsDataView, tableOptions);
     }
 
     function CSVToArray(strData, strDelimiter) {
@@ -373,7 +398,7 @@
 
             var newChkBox = document.createElement('input');
             newChkBox.type = 'checkbox';
-            newChkBox.id = 'iops_' + i;
+            newChkBox.id = 'chkboxFilter_' + i;
             newChkBox.value = i;
             newChkBox.checked = true;
             newChkBox.name = 'chkboxFilter';
@@ -381,10 +406,11 @@
             newChkBox.onclick = function(){filter(this.value)};
             if (i == 0) {
                 newChkBox.disabled = true;
+                newChkBox.className = 'chkboxFilter';
             }
 
             var label = document.createElement('label')
-            label.htmlFor = 'iops_' + i;
+            label.htmlFor = 'chkboxFilter_' + i;
             label.appendChild(document.createTextNode(dataTable.getColumnLabel(i)));
 
             var br = document.createElement('br');
@@ -405,9 +431,30 @@
             }
         }
 
-        console.log( "iopsDataView.getViewColumns() " + iopsDataView.getViewColumns());
-        console.log( "columnNumbers " + columnNumbers);
         iopsDataView.setColumns(columnNumbers);
+        latencyDataView.setColumns(columnNumbers);
+        mbpsDataView.setColumns(columnNumbers);
+        drawCharts();
+    }
+
+    function chk(clear) {
+        var columns = chkBoxList.getElementsByClassName('chkboxFilter');
+        var columnNumbers = [0];
+
+        for (var i = 0; i < chkBoxList.getElementsByClassName('chkboxFilter').length; i++) {
+            if (i != 0) {
+                if (!clear) {
+                    columnNumbers.push(parseInt(columns[i].value));
+                    columns[i].checked = true;
+                } else {
+                    columns[i].checked = false;
+                }
+            }
+        }
+
+        iopsDataView.setColumns(columnNumbers);
+        latencyDataView.setColumns(columnNumbers);
+        mbpsDataView.setColumns(columnNumbers);
         drawCharts();
     }
 
