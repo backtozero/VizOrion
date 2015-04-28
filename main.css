@@ -128,4 +128,4 @@ input {vertical-align: middle;}
     position: static;
     left: 0;
     opacity: 1;}
-.container { border:2px solid #ccc; width:200px; height: auto; overflow-y: scroll; }
+.container { border:2px solid #ccc; width:200px; height: auto; overflow-y: scroll; font-weight: normal}
