@@ -94,7 +94,7 @@
     </div>
 </div>
 </body>
-
+<!-- TODO MBPS filtering-->
 <script type="text/javascript">
     google.load('visualization', '1.1', {packages: ['line', 'table', 'corechart']});
     google.setOnLoadCallback();
@@ -132,7 +132,7 @@
     var iopsChartOptions = {
         title: 'IOPS ',
         width: 1200,
-        height: 1200,
+        height: 1000,
         crosshair: { trigger: 'both' },
         // Gives each series an axis that matches the vAxes number below.
         series: {
@@ -149,7 +149,7 @@
     var latencyChartOptions = {
         title: 'Latency ',
         width: 1200,
-        height: 1200,
+        height: 1000,
         crosshair: { trigger: 'both' },
         // Gives each series an axis that matches the vAxes number below.
         series: {
@@ -166,7 +166,7 @@
     var mbpsChartOptions = {
         title: 'MBPS ',
         width: 1200,
-        height: 1200,
+        height: 1000,
         crosshair: { trigger: 'both' },
         // Gives each series an axis that matches the vAxes number below.
         series: {
@@ -436,7 +436,6 @@
 
         iopsDataView.setColumns(columnNumbers);
         latencyDataView.setColumns(columnNumbers);
-        mbpsDataView.setColumns(columnNumbers);
         drawCharts();
     }
 
@@ -457,7 +456,6 @@
 
         iopsDataView.setColumns(columnNumbers);
         latencyDataView.setColumns(columnNumbers);
-        mbpsDataView.setColumns(columnNumbers);
         drawCharts();
     }
 
