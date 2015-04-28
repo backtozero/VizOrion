@@ -8,11 +8,11 @@
 <script type="text/javascript"
         src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['line', 'corechart', 'table']}]}"></script>
 
-<body>
+<body style="overflow-y: scroll">
 <div>
     <div style="float: left">
 
-        <table style="text-align: left">
+        <table style="text-align: left; margin: 2px">
             <tr>
                 <td><b>Files to load:</b></td>
             </tr>
@@ -40,7 +40,10 @@
                 </td>
             </tr>
             <tr>
-                <td><div class="container" id="chkboxList"></div></td>
+                <td><div class="container" id="chkboxList">
+                    <input type="checkbox" id="chkboxFilter_0" value="0" name="chkboxFilter" class="chkboxFilter" disabled="">
+                    <label for="chkboxFilter_0">Large/Small</label>
+                </div></td>
             </tr>
         </table>
     </div>
@@ -190,6 +193,7 @@
     };
 
     buttonfire.onclick = function () {
+        clearFilterList();
         initialize()
     };
 
@@ -260,7 +264,6 @@
     }
 
     function drawCharts() {
-
 
         iopsChart.draw(iopsDataView, iopsChartOptions);
         iopsTable.draw(iopsDataView, tableOptions);
@@ -456,6 +459,12 @@
         latencyDataView.setColumns(columnNumbers);
         mbpsDataView.setColumns(columnNumbers);
         drawCharts();
+    }
+
+    function clearFilterList() {
+        while (chkBoxList.firstChild) {
+            chkBoxList.removeChild(chkBoxList.firstChild);
+        }
     }
 
 </script>
